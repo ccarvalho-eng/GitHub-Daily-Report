@@ -25,7 +25,7 @@ This script tracks various GitHub activities for a specified user, including pul
    Export your GitHub username and personal access token as environment variables:
 
    ```sh
-   export GITHUB_USER="your-github-username"
+   export GITHUB_USER="your-github-username" 
    export GITHUB_TOKEN="your-personal-access-token"
    ```
 
@@ -69,4 +69,4 @@ Reviewed Pull Requests
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) file for details.
