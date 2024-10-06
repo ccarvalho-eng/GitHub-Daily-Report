@@ -61,10 +61,10 @@ fetch_todays_prs() {
         fi
 
         echo "$((pr_count + 1)). Title: $title"
-        echo "  a. Repository: $repo_name"
-        echo "  b. Status: $state $status_text"
-        echo "  c. Created At: $created_at"
-        echo "  d. URL: $url"
+        echo "      a. Repository: $repo_name"
+        echo "      b. Status: $state $status_text"
+        echo "      c. Created At: $created_at"
+        echo "      d. URL: $url"
         echo
 
         # Increment PR count
@@ -122,10 +122,10 @@ fetch_reviewed_prs() {
         fi
 
         echo "$((review_count + 1)). Title: $title"
-        echo "  a. Repository: $repo_name"
-        echo "  b. Status: $state $status_text"
-        echo "  c. Created At: $created_at"
-        echo "  d. URL: $url"
+        echo "      a. Repository: $repo_name"
+        echo "      b. Status: $state $status_text"
+        echo "      c. Created At: $created_at"
+        echo "      d. URL: $url"
         echo
 
         # Increment review count
