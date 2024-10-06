@@ -7,7 +7,7 @@ if [ -z "$GITHUB_USER" ] || [ -z "$GITHUB_TOKEN" ]; then
 fi
 
 # Today's date in ISO 8601 format
-TODAY=$(date -u +"%Y-%m-02T00:00:00Z")
+TODAY=$(date -u +"%Y-%m-%dT00:00:00Z")
 
 # Function to check if a closed PR was merged
 check_merged_status() {
@@ -50,6 +50,7 @@ fetch_todays_prs() {
         created_at=$(echo "$pr" | jq -r '.created_at')
         url=$(echo "$pr" | jq -r '.html_url')
         pr_url=$(echo "$pr" | jq -r '.pull_request.url // empty')
+        repo_name=$(echo "$url" | awk -F '/' '{print $(NF-3) "/" $(NF-2)}')
 
         # Check merged status if the PR is closed
         if [ "$state" == "closed" ]; then
@@ -60,9 +61,10 @@ fetch_todays_prs() {
         fi
 
         echo "$((pr_count + 1)). Title: $title"
-        echo "  a. Status: $state $status_text"
-        echo "  b. Created At: $created_at"
-        echo "  c. URL: $url"
+        echo "  a. Repository: $repo_name"
+        echo "  b. Status: $state $status_text"
+        echo "  c. Created At: $created_at"
+        echo "  d. URL: $url"
         echo
 
         # Increment PR count
