@@ -23,6 +23,20 @@ check_merged_status() {
   fi
 }
 
+# Function to check the review status of a PR
+check_review_status() {
+  pr_url="$1"
+  # Fetch the PR reviews
+  reviews=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "$pr_url/reviews")
+  review_status=$(echo "$reviews" | jq -r '.[].state // empty' | sort -u)
+
+  if [ -z "$review_status" ]; then
+    echo "Review Required"
+  else
+    echo "$review_status"
+  fi
+}
+
 # Function to fetch today's pull requests
 fetch_todays_prs() {
   page=1
@@ -51,13 +65,19 @@ fetch_todays_prs() {
         url=$(echo "$pr" | jq -r '.html_url')
         pr_url=$(echo "$pr" | jq -r '.pull_request.url // empty')
         repo_name=$(echo "$url" | awk -F '/' '{print $(NF-3) "/" $(NF-2)}')
+        draft=$(echo "$pr" | jq -r '.draft')
 
         # Check merged status if the PR is closed
         if [ "$state" == "closed" ]; then
           merged_status=$(check_merged_status "$pr_url")
           status_text="($merged_status)"
         else
-          status_text=""
+          if [ "$draft" == "true" ]; then
+            status_text="(Draft)"
+          else
+            review_status=$(check_review_status "$pr_url")
+            status_text="($review_status)"
+          fi
         fi
 
         echo "$((pr_count + 1)). Title: $title"
@@ -112,13 +132,19 @@ fetch_reviewed_prs() {
         url=$(echo "$pr" | jq -r '.html_url')
         pr_url=$(echo "$pr" | jq -r '.pull_request.url // empty')
         repo_name=$(echo "$url" | awk -F '/' '{print $(NF-3) "/" $(NF-2)}')
+        draft=$(echo "$pr" | jq -r '.draft')
 
         # Check merged status if the PR is closed
         if [ "$state" == "closed" ]; then
           merged_status=$(check_merged_status "$pr_url")
           status_text="($merged_status)"
         else
-          status_text=""
+          if [ "$draft" == "true" ]; then
+            status_text="(Draft)"
+          else
+            review_status=$(check_review_status "$pr_url")
+            status_text="($review_status)"
+          fi
         fi
 
         echo "$((review_count + 1)). Title: $title"
